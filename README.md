@@ -1,5 +1,5 @@
 # springboard_capstone_00
-The subsequent notebooks in this repository are written in python. Each section is outlined below following a pipe ('|'). Operations performed in the section are noted following a hyphen ('-'). Python libraries used are listed at the end of each operation within parenthesis (). 
+The subsequent notebooks in this repository are written in python. Each section is outlined below following a pipe ('|'). Operations performed in the section are noted following a hyphen ('-'). Python libraries used during operation are listed within parentheses (). 
 
     | 00_data_wrangling
         | 00_original_wrangle
