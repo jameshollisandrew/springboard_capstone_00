@@ -1,0 +1,165 @@
+
+==============================================================================================================
+PIPELINE
+==============================================================================================================
+- get text from documents
+- parse text into headers, body
+- get character counts
+
+problem: NaN values from Gender
+solution: filter non-NaN
+type: drop
+
+problem: Duplicate emails in multiple folders
+solution: Drop duplicates after body is seperate, before other transformations
+type: drop
+
+problem: =20/= splitting words; will ruin words when preprocessing replaces symbols with ' '
+solution: query by '=20' then remove = with no space prior to preprocessing
+notes:
+- Quoted-printable text
+
+problem: 'forwarded by' 'original message' 'forwarded message', 'ECT wrote on', '>...'
+solution: inline split on string
+notes: consider splitting AFTER phrase (at least for forwarded strings); forwarding habits might coorelate with people/gender
+
+==============================================================================================================
+SOLVED
+==============================================================================================================
+problem: RE: emails contain text not from original "sender"
+solution: regex catch string, split on string
+type: inline split
+
+problem: empty lines within email body
+solution: by-line delete before preprocessing
+type: inline drop
+notes:
+- can help with signatures query
+
+problem: names
+solution: stopwords list of names (set of nltk names + email parsed names)
+
+problem: consider parse by sender email
+solution: created m_body filter list based on sender emails without names
+example: got_g[got_g.m_from.str.contains('enron')].m_from.unique()[:20]
+redundant: gender query doesn't assign gender to non-name emails
+notes: reduce 'sent' group to only 'from @enron' addresses
+
+
+
+problem: what is X-FileName exactly?
+solution: reviewed, not immediately relevant
+notes:
+- is the name of the storage file for the user; can tell us 'who stored this email', but is redundant information with file directory, x_fold, X_orig
+
+problem: outlier search criteria: large character counts
+solution: use this search/criteria after cleaning to look for improvements
+notes: 
+- `o_mess.loc[480075,:].message` 279455 
+
+problem: can we weight against sender frequency?
+solution: reviewed, tabled
+notes:
+- probably, but at current skill level this is its own project; will note and consider for future
+
+problem: whether to blend subject text into email body
+solution: reviewed, tabled
+notes:
+- did not specifically look this up, but after reviewing mulitple emails there is a lot of variability; will table this for now
+
+problem: 'From:' doesn't match body or 'X-Origin'
+solution: reviewed
+example: o_mess[428,:].message
+notes: x-origin references the user that saved the document; 'from:' references the sender of the document
+
+problem: lines of forwarded text ">..."
+solution: regex, tabled
+example: o_mess.loc[9,:].message
+redundant: 'forwarded by'...solution
+notes:
+- ORDER: before preprocessing character removal
+- Combined with other forward filter queries
+
+problem: ENERGYNEWS spam mail
+solution: added to general sender query, tabled 
+notes:
+- remove all rows where `m_to` contains "energynews@"
+type: drop
+
+==============================================================================================================
+IN PROGRESS
+==============================================================================================================
+
+
+==============================================================================================================
+PENDING
+==============================================================================================================
+
+problem: initials
+solution: during modeling, use character count reduction to select words 3+
+notes: might lose value words like 'me' 'my' 'we'
+
+problem: converting contractions
+solution:
+notes: maybe don't remove the apost char
+
+problem: impact of lemmatize on person reference words like 'we, me, us'
+solution:
+notes: 
+- might not lemma...
+- can pad these words with chars to get above threshold then correct them after
+
+problem: .apply() | lambda x | list comp for cleaning
+solution:
+notes:
+
+
+
+==============================================================================================================
+FOR REVIEW
+==============================================================================================================
+
+problem: signatures
+solution: [MED-HIGH] Regex?
+example: o_mess[516199,:].message, 216027, 329277, 480075
+notes:
+- signatures that are from forwarded text appear to have irregular formatting; consider leave them out of initial design since they might be redundant
+- would benefit from empty lines
+
+==============================================================================================================
+NOTES
+==============================================================================================================
+- before running clean routines do a quick series of queries for a piechart 'visual' on lengths of email body impacted by clean
+
+
+# drops
+duplicate emails body
+duplicate emails processed body
+
+# inline splits
+ECT wrote on
+Forwarded Message
+Forwarded by
+Original Message
+
+***DROPS BEFORE INLINE FILTERING; OVERALL CORPUS REDUCTION FROM DROP REDUCES PROCESSING TIME FOR LATER***
+
+'Quality' Email index (for o_mess): 507826, 
+
+Ridiculous emails: o_mess.loc[507749,:].message
+
+[randomly in email body]
+Employee Name:
+BRIDGES, MICHAEL
+CANNON, LYDIA
+FORSTER, DAVID
+JAFRY, RAHIL
+JONES, ROBERT
+MCCULLOUGH, TRAVIS
+MONTAGNE, KEVIN
+PALMER, MARK
+PUTHIGAI, SAVITA
+SPILLER, TINA
+WEBB, JAY
+
+- .apply() | lambda x | list comp | testing for these filters/rips

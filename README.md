@@ -1,4 +1,4 @@
-# springboard_capstone_00
+# springboard_capstone_one
   This repository exists to collect documents for my first capstone project in the Springboard Data Science Career Track. 
 
   Problem:    
@@ -11,4 +11,4 @@
   Identify a set of emails where each email can be associated with the ​gender of the author for the learning set. Create a model that predicts the gender of input emails. 
 
   Keywords:    
-  enron emails, python, data, cleaning, wrangling, acquiring, preprocessing, numpy, pandas, os, requests_html, csv, concurrent.futures, re, tf-idf, cosine similarity
+  enron emails, python, data, cleaning, wrangling, acquiring, preprocessing, numpy, pandas, os, requests_html, csv, concurrent.futures, re, tf-idf, cosine similarity, machine learning, text analysis, tfidf, frequency analysis, logistic, regression, linear, support, vector, classification

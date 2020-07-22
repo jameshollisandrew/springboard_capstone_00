@@ -1,0 +1,93 @@
+01 WRANGLE DATA (wrangle_collect_parse.ipynb)
+- Collect data from files
+- Parse data into dataframe
+export: 'wrangle_collect_parse.csv'
+
+O2 GET GENDER (gender_collect_genders.ipynb)
+- get names from emails addresses
+- key names to gender
+- merge gender back to dataframe
+export: 'collect_genders.csv'
+
+03 VISUALIZE INITIAL DATA (visualize_initial_data.ipynb)
+- visualize emails sent by email address (histogram, edcf, bar)
+- visualize character frequency (histogram, edcf)
+export: 'visualize_initial_data.csv'
+
+04.01 CLEAN BY FILTER (clean_clean_by_filter.ipynb)
+- import: './data/enron/visualize_initial_data.csv'
+- drop duplicates from email body column
+- drop NaN from gender column
+- remove email senders without @enron
+- remove copy+paste articles with 'Copyright'
+- remove generated report emails
+- export: './data/enron/clean_clean_by_filter.csv'
+
+04.02 CLEAN BY SPLIT (clean_clean_by_splits.ipynb)
+- import: './data/enron/clean_clean_by_filter.csv'
+- split on '-----'
+- split on patterns that precede forwarded text
+- split on patterns that precede reply text
+- split on timestamps that precede duplicate text
+- export: './data/enron/clean_clean_by_splits.csv'
+
+04.03 CLEAN BY STRINGS (clean_clean_by_strings.ipynb)
+- import: './data/enron/clean_clean_by_splits.csv'
+- URLs
+- Remove email address strings
+- Remove words + colon symbol observed with signatures, other generic text
+- export: './data/enron/clean_clean_by_strings.csv'
+
+04.04 COSINE SIMILARITY REVIEW (clean_cosine_sim.ipynb)
+- import: './data/enron/clean_clean_by_strings.csv'
+
+05 PREPROCESS DATA (preprocess_run_preprocess.ipynb)
+- import: './data/enron/clean_clean_by_strings.csv'
+- remove non-word characters
+- remove underscore character
+- remove single characters
+- remove numbers
+- reduce space character multiples
+- remove stop words, names list
+- lemmatize words
+- export: './data/enron/preprocess_data.csv'
+
+06 CLEAN OUTLIERS (clean_clean_outliers.ipynb)
+- import: './data/enron/preprocess_data.csv'
+- Filter out above 3 sigma by character count
+- export: './data/enron/clean_clean_outliers.csv'
+
+06 FEATURE ANALYSIS (features_feature_analysis.ipynb)
+- import: './data/enron/clean_clean_outliers.csv'
+- initial observations
+- 1st adjustment: word count (7ct-60%), character count (3-13)
+- 2nd adjustment: word count (50ct-50%), character count (5-11)
+
+07 MODEL IMPLEMENTATION
+- import: './data/enron/clean_clean_outliers.csv'
+- Evaluate classifiers: random forest, multinomial nb, logistic regression, sgdc, linearsvc, knn classifier
+ - 5 cycles cv, resampling
+ - Variance across sample number
+- LinearSVC
+ - Gridsearch with 10 cycles CV
+ - Run best parameters
+- LogisticRegression
+ - Gridsearch with 10 cycles CV
+ - Run best parameters
+
+09 FUTURE IMPROVEMENTS
+- code cleanup (convert repeated code to functions; annotate functions)
+- apply, graph model cvs during parameter selection, final fit
+- redesign functions with vectorization, list comp where applicable
+- add export to .py
+- leverage of quick modeling during cleaning to improve evalution
+- try to leverage document structure more during cleaning - maybe library already exists for splitting, etc;
+- lock parameter variables in place, chart change in ROC relative to the more latent parameters (feature frequency, character count, etc)
+- leverage randomsearch with more parameters
+
+10 LESSONS LEARNED
+- importance of establishing structure (clearly defining problem, designing process plan, etc)
+- impact of data cleaning on model
+- maximizing library built-in functions
+
+- impact of preprocessing on output
